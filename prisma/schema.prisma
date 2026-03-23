@@ -11,5 +11,76 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("process.env.DATABASE_URL")
+  url      = env("DIRECT_URL")
+}
+
+//  user model
+
+model User {
+  id            String         @id @default(cuid())
+  email         String?        @unique
+  name          String?
+  accessToken   String?
+  createdAt     DateTime       @default(now())
+  avatarUrl     String?
+  installations Installation[]
+}
+
+//  installation gitHub
+
+model Installation {
+  id           String   @id @default(cuid())
+  githubInstId String   @unique
+  accountLogin String?
+  accountType  String?
+  createdAt    DateTime @default(now())
+
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+  repositories Repository[]
+}
+
+//  repos
+
+model Repository {
+  id            String   @id @default(cuid())
+  githubRepoId  String   @unique
+  name          String
+  fullName      String
+  isPrivate     Boolean
+  defaultBranch String?
+  createdAt     DateTime @default(now())
+
+  installationId String
+  installation   Installation @relation(fields: [installationId], references: [id])
+  scans          Scan[]
+}
+
+//  scan model for  pr any change or base just add
+
+model Scan {
+  id        String   @id @default(cuid())
+  type      String // pr ,push , failed or baseline
+  status    String // pending ,running ,completed , failed
+  createdAt DateTime @default(now())
+
+  repositoryId String
+  repository   Repository @relation(fields: [repositoryId], references: [id])
+  findings     Finding[]
+}
+
+// finding model
+
+model Finding {
+  id          String   @id @default(cuid())
+  type        String
+  severity    String
+  filePath    String
+  lineNumber  Int?
+  description String
+  suggestion  String?
+  createdAt   DateTime @default(now())
+
+  scanId String
+  scan   Scan   @relation(fields: [scanId], references: [id])
 }
