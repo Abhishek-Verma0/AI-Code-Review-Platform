@@ -106,5 +106,6 @@ export async function POST(req) {
   } catch (error) {
     console.error("Webhook error:", error);
     return new Response("Error", { status: 500 });
+    
   }
 }
