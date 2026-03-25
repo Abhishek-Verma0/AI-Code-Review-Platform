@@ -98,7 +98,7 @@ export async function POST(req) {
 
         console.log("New PR or update:", repoId, prNumber);
 
-        // NEXT  → enqueue scan job (later)
+        //enqueue scan job (later)
       }
     }
 

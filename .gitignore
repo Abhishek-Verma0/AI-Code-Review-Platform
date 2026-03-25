@@ -43,3 +43,5 @@ next-env.d.ts
 AI_Code_Review_Platform_Plan.pdf
 implementation_plan.md
 /app/generated/prisma
+
+.vscode
